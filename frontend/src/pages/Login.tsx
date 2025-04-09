@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { LogIn } from 'lucide-react';
+import api from '../api/axios';
 
 interface LoginForm {
   email: string;
@@ -15,9 +16,20 @@ function Login() {
     formState: { errors },
   } = useForm<LoginForm>();
 
-  const onSubmit = (data: LoginForm) => {
-    console.log(data);
-    // TODO: Implement login logic
+  const onSubmit = async (data: LoginForm) => {
+    try {
+      // Paso 1: Obtener la cookie CSRF de Laravel Sanctum
+      await api.get('/sanctum/csrf-cookie');
+
+      // Paso 2: Enviar credenciales
+      const response = await api.post('/api/login', data);
+
+      console.log('✅ Usuario autenticado:', response.data);
+
+      // Aquí puedes redirigir al usuario o guardar info
+    } catch (error: any) {
+      console.error('❌ Error al iniciar sesión:', error.response?.data || error.message);
+    }
   };
 
   return (
