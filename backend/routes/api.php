@@ -26,7 +26,7 @@ Route::post('/login', function (Request $request) {
     return response()->json(['message' => 'Login exitoso']);
 });
 
-Route::post('/logout', function (Request $request) {
+Route::post('/logout', function () {
     auth()->guard('web')->logout();
     return response()->json(['message' => 'Logout exitoso']);
 });
