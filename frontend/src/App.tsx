@@ -8,7 +8,7 @@ import Layout from './components/Layout';
 
 function App() {
   // TODO: Replace with actual auth check
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   return (
     <Router>
