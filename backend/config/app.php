@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'providers' => [
+
+    /*
+     * Laravel Framework Service Providers...
+     */
+    // ...
+
+    App\Providers\RouteServiceProvider::class,
+
+],
+
 ];
