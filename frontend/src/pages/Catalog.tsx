@@ -44,7 +44,8 @@ const Catalog = () => {
             onChange={setBrands}
         />
 
-        <FileUpload label="Archivo de catálogo" onFileSelect={setFile} />
+        <FileUpload onFileSelect={setSelectedFile} />
+
 
         <Button onClick={handleSubmit}>Enviar catálogo</Button>
         </div>
