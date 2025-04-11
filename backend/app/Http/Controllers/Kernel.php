@@ -1,9 +1,23 @@
+<?php
+
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
-protected $middlewareGroups = [
-    'api' => [
-        EnsureFrontendRequestsAreStateful::class, // <--- Asegúrate que esté
-        'throttle:api',
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-    ],
-];
+class Kernel
+{
+    protected $middlewareGroups = [
+        'api' => [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+        'web' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+        'auth' => [
+            \Illuminate\Auth\Middleware\Authenticate::class,
+        ],
+        'guest' => [
+            \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
+        ],
+    ];
+}
