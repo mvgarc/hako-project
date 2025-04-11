@@ -1,12 +1,15 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home, Users, Package, LogOut } from 'lucide-react';
+import { Home, Users, Package, LogOut, Settings, UploadCloud, FileText } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Proveedores', href: '/providers', icon: Users },
   { name: 'Marcas', href: '/brands', icon: Package },
+  {name:'Subir Catalogo', href:'/catalog', icon: UploadCloud},
+  { name: 'Reportes', href: '/reports', icon: FileText },
+  { name: 'Configuración', href: '/settings', icon: Settings },
 ];
 
 function Layout() {
