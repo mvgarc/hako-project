@@ -1,4 +1,4 @@
-# Project
+# 📦 Hako Project
 
 Este es un proyecto full stack compuesto por un frontend desarrollado con **React + TypeScript** y un backend desarrollado con **Laravel**. El propósito del proyecto es un gestor de archivos para los catalogos que envian los proveedores.
 
