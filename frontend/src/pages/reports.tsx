@@ -2,34 +2,52 @@ import { useState, useEffect } from 'react';
 import Table from '../components/ui/Table';
 import Filters from '../components/ui/Filters';
 
+// Tipo de datos para los reportes
+type Report = {
+    filename: string;
+    provider: string;
+    brand: string;
+    publishedAt: string;
+    notes?: string;
+};
+
 const Reports: React.FC = () => {
-    const [reports, setReports] = useState<{ filename: string; provider: string; brand: string; publishedAt: string }[]>([]);
-    const [filteredReports, setFilteredReports] = useState<{ filename: string; provider: string; brand: string; publishedAt: string }[]>([]);
-    const [providers, setProviders] = useState<string[]>([]); // Lista de proveedores
-    const [brands, setBrands] = useState<string[]>([]); // Lista de marcas
+    const [reports, setReports] = useState<Report[]>([]);
+    const [filteredReports, setFilteredReports] = useState<Report[]>([]);
+    const [providers, setProviders] = useState<string[]>([]);
+    const [brands, setBrands] = useState<string[]>([]);
 
     useEffect(() => {
-        // Cargar los datos de los reportes (puedes obtenerlo de una API)
-        const fetchedReports = [
-        { filename: 'catalogo1.pdf', provider: 'Proveedor A', brand: 'Marca A', publishedAt: '2023-04-05T14:00' },
-        { filename: 'catalogo2.pdf', provider: 'Proveedor B', brand: 'Marca B', publishedAt: '2023-04-06T15:00' },
-        // Más datos...
+        // Simulación de datos obtenidos desde una API
+        const fetchedReports: Report[] = [
+        {
+            filename: 'catalogo1.pdf',
+            provider: 'Proveedor A',
+            brand: 'Marca A',
+            publishedAt: '2023-04-05T14:00',
+            notes: '',
+        },
+        {
+            filename: 'catalogo2.pdf',
+            provider: 'Proveedor B',
+            brand: 'Marca B',
+            publishedAt: '2023-04-06T15:00',
+            notes: '',
+        },
         ];
-        setReports(fetchedReports);
-        setFilteredReports(fetchedReports);
 
-        // Cargar proveedores y marcas para los filtros
-        const providersList = ['Proveedor A', 'Proveedor B', 'Proveedor C'];
-        const brandsList = ['Marca A', 'Marca B', 'Marca C'];
-        setProviders(providersList);
-        setBrands(brandsList);
+    setReports(fetchedReports);
+    setFilteredReports(fetchedReports);
+
+    setProviders(['Proveedor A', 'Proveedor B', 'Proveedor C']);
+    setBrands(['Marca A', 'Marca B', 'Marca C']);
     }, []);
-
+    
     const handleFilterChange = (filters: { provider: string; brand: string; date: string }) => {
-        let filtered = reports;
+        let filtered = [...reports];
 
         if (filters.provider) {
-            filtered = filtered.filter((report) => report.provider === filters.provider);
+        filtered = filtered.filter((report) => report.provider === filters.provider);
         }
 
         if (filters.brand) {
@@ -43,14 +61,24 @@ const Reports: React.FC = () => {
         setFilteredReports(filtered);
     };
 
+    const handleNotesChange = (index: number, newNote: string) => {
+        const updated = [...filteredReports];
+        updated[index].notes = newNote;
+
+        // Actualiza ambos estados para mantener consistencia
+        const updatedAll = reports.map((r) =>
+            r.filename === updated[index].filename ? { ...r, notes: newNote } : r
+            );
+
+            setFilteredReports(updated);
+            setReports(updatedAll);
+        };
+
     return (
-        <div>
-        <Filters
-            providers={providers}
-            brands={brands}
-            onFilterChange={handleFilterChange}
-        />
-        <Table reports={filteredReports} />
+        <div className="p-6 space-y-6">
+        <h1 className="text-xl font-semibold text-gray-800">Reportes de Archivos Subidos</h1>
+        <Filters providers={providers} brands={brands} onFilterChange={handleFilterChange} />
+        <Table reports={filteredReports} onNotesChange={handleNotesChange} />
         </div>
     );
 };
