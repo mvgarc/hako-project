@@ -39,6 +39,14 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         ))}
+        <Card className="col-span-2">
+        <CardHeader>
+          <CardTitle>Archivos por proveedor</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Chart />
+        </CardContent>
+      </Card>
       </div>
     </div>
   );
