@@ -23,7 +23,7 @@ function Layout() {
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-center h-16 px-4 border-b">
               <h1 className="text-xl font-bold text-gray-900">
-                Sistema de Compras
+                HAKO
               </h1>
             </div>
             <nav className="flex-1 px-2 py-4 space-y-1">
