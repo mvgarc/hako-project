@@ -5,6 +5,7 @@ import Providers from './pages/Providers';
 import Brands from './pages/Brands';
 import Layout from './components/Layout';
 import Catalog from './pages/Catalog';
+import Reports from './pages/reports';
 
 function App() {
   // TODO: Replace with actual auth check
@@ -23,6 +24,7 @@ function App() {
           <Route path="/providers" element={<Providers />} />
           <Route path="/brands" element={<Brands />} />
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="/reports" element={<Reports />} />
         </Route>
       </Routes>
     </Router>
