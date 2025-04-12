@@ -5,7 +5,7 @@ import Providers from './pages/Providers';
 import Brands from './pages/Brands';
 import Layout from './components/Layout';
 import Catalog from './pages/Catalog';
-import Reports from './pages/reports';
+import Reports from './pages/Reports';
 
 function App() {
   // TODO: Replace with actual auth check
