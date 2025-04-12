@@ -2,38 +2,41 @@ type Report = {
     filename: string;
     provider: string;
     brand: string;
-    publishedAt: string; // Fecha y hora de publicación
+    publishedAt: string;
 };
-    // Componente de tabla para mostrar los informes
-    // Este componente recibe una lista de informes y los muestra en una tabla
-    // Cada informe tiene un nombre de archivo, proveedor, marca y fecha/hora de publicación
-    //NO USAR EL COMPONENTE DE FORMA GENERAL, ya que lo realicé muy específico para el proyecto
+
+// This component is a table that displays a list of reports with their details.
+// It takes in a list of reports as props and renders them in a structured format.
+
 type TableProps = {
     reports: Report[];
 };
 
 const Table: React.FC<TableProps> = ({ reports }) => {
     return (
-        <table className="min-w-full table-auto">
-            <thead>
+    <div className="overflow-x-auto rounded-md shadow border border-gray-200">
+        <table className="min-w-full text-sm text-left">
+        <thead className="bg-gray-100 text-gray-700 font-medium">
             <tr>
-                <th className="px-4 py-2 border">Nombre del Archivo</th>
-                <th className="px-4 py-2 border">Proveedor</th>
-                <th className="px-4 py-2 border">Marca</th>
-                <th className="px-4 py-2 border">Fecha y Hora</th>
+            <th className="px-4 py-3 border-b">Archivo</th>
+            <th className="px-4 py-3 border-b">Proveedor</th>
+            <th className="px-4 py-3 border-b">Marca</th>
+            <th className="px-4 py-3 border-b">Fecha y Hora</th>
             </tr>
-            </thead>
-        <tbody>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
             {reports.map((report, index) => (
             <tr key={index}>
-                <td className="px-4 py-2 border">{report.filename}</td>
-                <td className="px-4 py-2 border">{report.provider}</td>
-                <td className="px-4 py-2 border">{report.brand}</td>
-                <td className="px-4 py-2 border">{report.publishedAt}</td>
+                <td className="px-4 py-2">{report.filename}</td>
+                <td className="px-4 py-2">{report.provider}</td>
+                <td className="px-4 py-2">{report.brand}</td>
+                <td className="px-4 py-2">{new Date(report.publishedAt).toLocaleString()}</td>
             </tr>
             ))}
         </tbody>
         </table>
-    );
+    </div>
+);
 };
+
 export default Table;
