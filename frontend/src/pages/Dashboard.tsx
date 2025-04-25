@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import Chart from "../components/ui/Chart";
 
