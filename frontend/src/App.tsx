@@ -6,6 +6,7 @@ import Brands from './pages/Brands';
 import Layout from './components/Layout';
 import Catalog from './pages/Catalog';
 import Reports from './pages/Reports';
+import { Settings } from 'lucide-react';
 
 function App() {
   // TODO: Replace with actual auth check
@@ -25,6 +26,8 @@ function App() {
           <Route path="/brands" element={<Brands />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />}/>
+
         </Route>
       </Routes>
     </Router>
