@@ -39,7 +39,7 @@ const Catalog = () => {
         <Select
             label="Marcas"
             options={brandOptions}
-            selected={brands}
+            value={brands}
             onChange={setBrands}
         />
 
