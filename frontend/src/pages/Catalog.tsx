@@ -37,7 +37,7 @@ const Catalog = () => {
             onChange={setProvider}
         />
 
-        <MultiSelect
+        <Select
             label="Marcas incluidas"
             options={brandOptions}
             selected={brands}
