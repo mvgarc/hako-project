@@ -38,7 +38,7 @@ const Catalog = () => {
         />
 
         <Select
-            label="Marcas incluidas"
+            label="Marcas"
             options={brandOptions}
             selected={brands}
             onChange={setBrands}
