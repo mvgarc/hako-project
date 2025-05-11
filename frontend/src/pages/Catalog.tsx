@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import FileUpload from "../components/ui/FileUpload";
 import Select from "../components/ui/Select";
-import MultiSelect from "../components/ui/MultiSelect";
 import Button from "../components/ui/Button"; 
 
 const Catalog = () => {
