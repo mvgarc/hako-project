@@ -29,7 +29,7 @@ function Brands() {
       }
 
       // petición POST al backend
-      const response = await fetch('http://localhost:3000/api/marcas', {
+      const response = await fetch('http://localhost:4000/api/marcas', {
         method: 'POST',
         body: formData,
     });
