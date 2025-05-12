@@ -107,16 +107,19 @@ function Brands() {
             {...register('name', { required: 'Este campo es requerido' })}
             error={errors.name?.message}
           />
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Logo de la Marca
             </label>
-            <FileUpload
-              onFileSelect={handleFileSelect}
-              maxSize={2 * 1024 * 1024 * 1024} // 2GB
-            />
 
-            {preview && (
+            {/* 👇 Aquí se muestra la previsualización o el FileUpload */}
+            {!preview ? (
+              <FileUpload
+                onFileSelect={handleFileSelect}
+                maxSize={2 * 1024 * 1024 * 1024} // 2GB
+              />
+            ) : (
               <div className="relative mt-4 p-2 border rounded-lg">
                 <img
                   src={preview}
