@@ -19,7 +19,7 @@ function Brands() {
     formState: { errors },
   } = useForm<BrandForm>();
 
-  const onSubmit = (data: BrandForm) => {
+  const onSubmit = async (data: BrandForm) => {
     try {
       const formData = new FormData();
       formData.append("nombre", data.name);
@@ -29,19 +29,19 @@ function Brands() {
       }
 
       // petición POST al backend
-      const response = await axios.post("http://localhost:5000/api/marcas", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await fetch('http://localhost:3000/api/marcas', {
+        method: 'POST',
+        body: formData,
+    });
 
-      if (response.status === 201) {
-        alert("Marca creada exitosamente");
-      }
-    } catch (error) {
-      console.error("Error al crear la marca:", error);
-      alert("Hubo un error al crear la marca");
+    if (response.ok) {
+        alert('Marca creada con éxito');
+    } else {
+        alert('Hubo un error al crear la marca');
     }
+} catch (error) {
+    console.error('Error al crear la marca:', error);
+}
   };
 
   const handleFileSelect = (file: File) => {
