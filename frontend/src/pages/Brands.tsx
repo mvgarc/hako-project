@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -11,17 +11,40 @@ interface BrandForm {
   logo: File | null;
 }
 
+interface Brand {
+  id: number;
+  nombre: string;
+  logo: string;
+}
+
 function Brands() {
   const {
     register,
     handleSubmit,
     setValue,
+    reset, // ✅ Para limpiar el formulario
     formState: { errors },
   } = useForm<BrandForm>();
 
+  const [brands, setBrands] = useState<Brand[]>([]);
+
+  // 🚀 Obtener marcas desde el backend
+  const fetchBrands = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/marcas');
+      setBrands(response.data);
+    } catch (error) {
+      console.error('Error al obtener las marcas:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
+  // 🚀 Crear nueva marca
   const onSubmit = async (data: BrandForm) => {
     try {
-      // Creamos un objeto FormData para enviar datos mixtos (texto + archivo)
       const formData = new FormData();
       formData.append('nombre', data.name);
 
@@ -29,7 +52,6 @@ function Brands() {
         formData.append('logo', data.logo);
       }
 
-      // Enviamos los datos al backend
       await axios.post('http://localhost:3000/api/marcas', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -37,6 +59,8 @@ function Brands() {
       });
 
       alert('Marca creada exitosamente');
+      fetchBrands(); // Recargar la lista
+      reset(); // ✅ Limpiar el formulario
     } catch (error) {
       console.error('Error al crear la marca:', error);
       alert('Hubo un error al crear la marca.');
@@ -78,6 +102,22 @@ function Brands() {
             Guardar Marca
           </Button>
         </form>
+      </div>
+
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold mb-4">Lista de Marcas</h2>
+        <div className="grid grid-cols-3 gap-4">
+          {brands.map((brand) => (
+            <div key={brand.id} className="border rounded-lg p-4">
+              <img
+                src={`http://localhost:3000/${brand.logo}`}
+                alt={brand.nombre}
+                className="w-full h-32 object-cover mb-2"
+              />
+              <p className="text-center font-semibold">{brand.nombre}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
