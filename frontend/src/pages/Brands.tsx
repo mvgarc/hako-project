@@ -28,7 +28,7 @@ function Brands() {
         formData.append("logo", data.logo);
       }
 
-      // 👇 Aquí se hace la petición POST al backend
+      // petición POST al backend
       const response = await axios.post("http://localhost:5000/api/marcas", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
