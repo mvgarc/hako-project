@@ -4,6 +4,7 @@ import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import FileUpload from '../components/ui/FileUpload';
 import { Plus } from 'lucide-react';
+import axios from "axios";
 
 interface BrandForm {
   name: string;
@@ -19,8 +20,28 @@ function Brands() {
   } = useForm<BrandForm>();
 
   const onSubmit = (data: BrandForm) => {
-    console.log(data);
-    // TODO: Implement brand creation logic
+    try {
+      const formData = new FormData();
+      formData.append("nombre", data.name);
+
+      if (data.logo) {
+        formData.append("logo", data.logo);
+      }
+
+      // 👇 Aquí se hace la petición POST al backend
+      const response = await axios.post("http://localhost:5000/api/marcas", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 201) {
+        alert("Marca creada exitosamente");
+      }
+    } catch (error) {
+      console.error("Error al crear la marca:", error);
+      alert("Hubo un error al crear la marca");
+    }
   };
 
   const handleFileSelect = (file: File) => {
