@@ -1,10 +1,9 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import FileUpload from '../components/ui/FileUpload';
 import { Plus } from 'lucide-react';
-import axios from "axios";
+import axios from 'axios';
 
 interface BrandForm {
   name: string;
@@ -21,27 +20,26 @@ function Brands() {
 
   const onSubmit = async (data: BrandForm) => {
     try {
+      // Creamos un objeto FormData para enviar datos mixtos (texto + archivo)
       const formData = new FormData();
-      formData.append("nombre", data.name);
+      formData.append('nombre', data.name);
 
       if (data.logo) {
-        formData.append("logo", data.logo);
+        formData.append('logo', data.logo);
       }
 
-      // petición POST al backend
-      const response = await fetch('http://localhost:3000/api/marcas', {
-        method: 'POST',
-        body: formData,
-    });
+      // Enviamos los datos al backend
+      await axios.post('http://localhost:3000/api/marcas', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-    if (response.ok) {
-        alert('Marca creada con éxito');
-    } else {
-        alert('Hubo un error al crear la marca');
+      alert('Marca creada exitosamente');
+    } catch (error) {
+      console.error('Error al crear la marca:', error);
+      alert('Hubo un error al crear la marca.');
     }
-} catch (error) {
-    console.error('Error al crear la marca:', error);
-}
   };
 
   const handleFileSelect = (file: File) => {
@@ -80,8 +78,6 @@ function Brands() {
           </Button>
         </form>
       </div>
-
-      {/* Add brand list here */}
     </div>
   );
 }
