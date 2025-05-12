@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import FileUpload from '../components/ui/FileUpload';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import axios from 'axios';
 
 interface BrandForm {
@@ -22,11 +22,15 @@ function Brands() {
     register,
     handleSubmit,
     setValue,
-    reset, // ✅ Para limpiar el formulario
+    reset,
     formState: { errors },
   } = useForm<BrandForm>();
 
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 🚀 Obtener marcas desde el backend
   const fetchBrands = async () => {
@@ -48,8 +52,8 @@ function Brands() {
       const formData = new FormData();
       formData.append('nombre', data.name);
 
-      if (data.logo) {
-        formData.append('logo', data.logo);
+      if (selectedFile) {
+        formData.append('logo', selectedFile);
       }
 
       await axios.post('http://localhost:3000/api/marcas', formData, {
@@ -59,16 +63,30 @@ function Brands() {
       });
 
       alert('Marca creada exitosamente');
-      fetchBrands(); // Recargar la lista
-      reset(); // ✅ Limpiar el formulario
+      fetchBrands();
+      reset();
+      setSelectedFile(null);
+      setPreview(null);
     } catch (error) {
       console.error('Error al crear la marca:', error);
       alert('Hubo un error al crear la marca.');
     }
   };
 
+  // 🚀 Manejar la selección de archivo y la previsualización
   const handleFileSelect = (file: File) => {
     setValue('logo', file);
+    setSelectedFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  // 🚀 Eliminar selección de archivo
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -97,7 +115,28 @@ function Brands() {
               onFileSelect={handleFileSelect}
               maxSize={2 * 1024 * 1024 * 1024} // 2GB
             />
+
+            {preview && (
+              <div className="relative mt-4 p-2 border rounded-lg">
+                <img
+                  src={preview}
+                  alt="Vista Previa"
+                  className="w-full h-32 object-cover mb-2"
+                />
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">{selectedFile?.name}</span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveFile}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
+
           <Button type="submit" className="mt-4">
             Guardar Marca
           </Button>
