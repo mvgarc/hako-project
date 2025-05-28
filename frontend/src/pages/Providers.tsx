@@ -145,7 +145,7 @@ const onSubmit = async (data: ProviderForm) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {providers.map((prov) => (
-                  <tr key={prov.id}>
+                  <tr key={`${prov.id}-${prov.name}`}>
                     <td className="px-4 py-2">{prov.name}</td>
                     <td className="px-4 py-2">
                       <a
