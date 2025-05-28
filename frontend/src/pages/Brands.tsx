@@ -32,10 +32,10 @@ function Brands() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // 🚀 Obtener marcas desde el backend
+  //Obtener marcas desde el backend
   const fetchBrands = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/marcas');
+      const response = await axios.get('http://localhost:4000/api/marcas');
       setBrands(response.data);
     } catch (error) {
       console.error('Error al obtener las marcas:', error);
@@ -46,7 +46,7 @@ function Brands() {
     fetchBrands();
   }, []);
 
-  // 🚀 Crear nueva marca
+  // Crear nueva marca
   const onSubmit = async (data: BrandForm) => {
     try {
       const formData = new FormData();
@@ -56,7 +56,7 @@ function Brands() {
         formData.append('logo', selectedFile);
       }
 
-      await axios.post('http://localhost:3000/api/marcas', formData, {
+      await axios.post('http://localhost:4000/api/marcas', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -152,7 +152,7 @@ function Brands() {
           {brands.map((brand) => (
             <div key={brand.id} className="border rounded-lg p-4">
               <img
-                src={`http://localhost:3000/${brand.logo}`}
+                src={`http://localhost:4000/${brand.logo}`}
                 alt={brand.nombre}
                 className="w-full h-32 object-cover mb-2"
               />
