@@ -56,17 +56,17 @@ function Providers() {
   }, []);
 
   // Enviar nuevo proveedor
-  const onSubmit = async (data: ProviderForm) => {
-    try {
-      await api.post('/api/proveedores', data);
-      alert('Proveedor creado con éxito');
-      reset();
-      fetchProviders(); // Recargar lista
-    } catch (err) {
-      console.error('Error creando proveedor:', err);
-      alert('Error al crear proveedor');
-    }
-  };
+const onSubmit = async (data: ProviderForm) => {
+  try {
+    const res = await api.post('/api/proveedores', data);
+    setProviders((prev) => [...prev, res.data]); // Evita fetch extra
+    alert('Proveedor creado con éxito');
+    reset();
+  } catch (err) {
+    console.error('Error creando proveedor:', err);
+    alert('Error al crear proveedor');
+  }
+};
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
