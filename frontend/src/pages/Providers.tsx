@@ -114,8 +114,8 @@ const onSubmit = async (data: ProviderForm) => {
               error={errors.companyName?.message}
             />
           </div>
-          <Button type="submit" className="mt-4">
-            Guardar Proveedor
+          <Button type="submit" className="mt-4" disabled={loading}>
+            {loading ? 'Guardando...' : 'Guardar Proveedor'}
           </Button>
         </form>
       </div>
