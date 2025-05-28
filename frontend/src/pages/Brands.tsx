@@ -73,14 +73,14 @@ function Brands() {
     }
   };
 
-  // 🚀 Manejar la selección de archivo y la previsualización
+  // Manejar la selección de archivo y la previsualización
   const handleFileSelect = (file: File) => {
     setValue('logo', file);
     setSelectedFile(file);
     setPreview(URL.createObjectURL(file));
   };
 
-  // 🚀 Eliminar selección de archivo
+  // Eliminar selección de archivo
   const handleRemoveFile = () => {
     setSelectedFile(null);
     setPreview(null);
