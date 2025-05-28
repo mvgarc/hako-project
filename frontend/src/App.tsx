@@ -7,6 +7,7 @@ import Layout from './components/Layout';
 import Catalog from './pages/Catalog';
 import Reports from './pages/Reports';
 import { Settings } from 'lucide-react';
+import PrivateRoute from './components/ui/PrivateRoute';
 
 function App() {
   // TODO: Replace with actual auth check
