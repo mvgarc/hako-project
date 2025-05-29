@@ -38,18 +38,27 @@ function Providers() {
 
   // Cargar proveedores del backend
   const fetchProviders = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await api.get('/api/proveedores');
-      setProviders(res.data);
-    } catch (err) {
-      setError('Error al cargar proveedores');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  setError(null);
+  try {
+    const res = await api.get('/api/proveedores');
+    const mapped = res.data.map((prov: any) => ({
+      id: prov.id,
+      name: prov.nombre,
+      website: prov.paginaWeb,
+      sellerName: prov.vendedor,
+      sellerPhone: prov.telefono,
+      fiscalAddress: prov.direccionFiscal,
+      companyName: prov.nombreEmpresa,
+    }));
+    setProviders(mapped);
+  } catch (err) {
+    setError('Error al cargar proveedores');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchProviders();
