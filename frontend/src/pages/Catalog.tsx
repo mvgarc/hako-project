@@ -10,78 +10,91 @@ const Catalog = () => {
     const [brands, setBrands] = useState<string[]>([]);
     const [file, setFile] = useState<File | null>(null);
 
-    const [providerOptions, setProviderOptions] = useState<string[]>([]);
-    const [brandOptions, setBrandOptions] = useState<string[]>([]);
-    
+    const [providerOptions, setProviderOptions] = useState<{ label: string; value: string }[]>([]);
+    const [brandOptions, setBrandOptions] = useState<{ label: string; value: string }[]>([]);
+
     useEffect(() => {
         // Obtener proveedores
         api.get("/api/proveedores")
-        .then((res) => {
-            const nombres = res.data.map((p: any) => p.nombre); // Ajusta según estructura
-            setProviderOptions(nombres);
-        })
-        .catch((err) => {
-            console.error("Error al cargar proveedores:", err);
-        });
+            .then((res) => {
+                const opciones = res.data.map((p: any) => ({
+                    label: p.nombre,
+                    value: p.id.toString(),
+                }));
+                setProviderOptions(opciones);
+            })
+            .catch((err) => {
+                console.error("Error al cargar proveedores:", err);
+            });
 
         // Obtener marcas
         api.get("/api/marcas")
-        .then((res) => {
-            const nombres = res.data.map((m: any) => m.nombre); // Ajusta según estructura
-            setBrandOptions(nombres);
-        })
-        .catch((err) => {
-            console.error("Error al cargar marcas:", err);
-        });
-    }, []);
+            .then((res) => {
+                const opciones = res.data.map((m: any) => ({
+                    label: m.nombre,
+                    value: m.id.toString(),
+                }));
+                // --- ¡La línea que faltaba! ---
+                setBrandOptions(opciones); 
+            })
+            .catch((err) => {
+                console.error("Error al cargar marcas:", err);
+            });
+    }, []); // El array de dependencias está vacío, se ejecuta solo al montar el componente.
+
     const handleSubmit = () => {
         if (!file || !provider || brands.length === 0) {
-        alert("Por favor completa todos los campos.");
-        return;
-    }
+            alert("Por favor completa todos los campos.");
+            return;
+        }
 
-    const formData = new FormData();
-    formData.append("catalog", file);
-    formData.append("provider", provider);
-    formData.append("brands", JSON.stringify(brands));
+        const formData = new FormData();
+        formData.append("catalog", file);
+        formData.append("provider", provider);
+        formData.append("brands", JSON.stringify(brands));
 
-    api.post("/api/catalogos", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    })
-    .then((res) => {
-        alert("Catálogo subido con éxito");
-        console.log("Respuesta del servidor:", res.data);
-    })
-    .catch((err) => {
-        console.error("Error al subir catálogo:", err);
-        alert("Hubo un error al subir el catálogo.");
-    });
-};
-return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
-        <h1 className="text-2xl font-bold">Subir nuevo catálogo</h1>
+        api.post("/api/catalogos", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then((res) => {
+            alert("Catálogo subido con éxito");
+            console.log("Respuesta del servidor:", res.data);
+            // Optionally, reset form fields after successful upload
+            setFile(null);
+            setProvider("");
+            setBrands([]);
+        })
+        .catch((err) => {
+            console.error("Error al subir catálogo:", err);
+            alert("Hubo un error al subir el catálogo.");
+        });
+    };
 
-        <Select
-            label="Proveedor"
-            options={providerOptions}
-            value={provider}
-            onChange={setProvider}
-        />
+    return (
+        <div className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
+            <h1 className="text-2xl font-bold">Subir nuevo catálogo</h1>
 
-        <MultiSelect
-            label="Marcas"
-            options={brandOptions}
-            selected={brands}
-            onChange={setBrands}
-        />
+            <Select
+                label="Proveedor"
+                options={providerOptions}
+                value={provider}
+                onChange={setProvider}
+            />
 
-        <FileUpload onFileSelect={setFile} />
+            <MultiSelect
+                label="Marcas"
+                options={brandOptions}
+                selected={brands}
+                onChange={setBrands}
+            />
 
-        <Button onClick={handleSubmit}>Enviar catálogo</Button>
+            <FileUpload onFileSelect={setFile} />
+
+            <Button onClick={handleSubmit}>Enviar catálogo</Button>
         </div>
-        );
+    );
 };
 
 export default Catalog;

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { Plus } from 'lucide-react';
-import api from '../api/axios';
+import api from '../api/axios'; // Asegúrate de que esta ruta sea correcta para tu instancia de Axios
 
 interface ProviderForm {
   name: string;
@@ -37,68 +37,75 @@ function Providers() {
   const [error, setError] = useState<string | null>(null);
 
   // Cargar proveedores del backend
-  const fetchProviders = async () => {
-  setLoading(true);
-  setError(null);
-  try {
-    const res = await api.get('/api/proveedores');
-    const mapped = res.data.map((prov: any) => ({
-      id: prov.id,
-      name: prov.nombre,
-      website: prov.paginaWeb,
-      sellerName: prov.vendedor,
-      sellerPhone: prov.telefono,
-      fiscalAddress: prov.direccionFiscal,
-      companyName: prov.nombreEmpresa,
-    }));
-    setProviders(mapped);
-  } catch (err) {
-    setError('Error al cargar proveedores');
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  // Esta función ha sido movida dentro de useEffect para que no necesite estar en el array de dependencias.
   useEffect(() => {
+    const fetchProviders = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await api.get('/api/proveedores');
+        const mapped = res.data.map((prov: any) => ({
+          id: prov.id,
+          name: prov.nombre,
+          website: prov.paginaWeb,
+          sellerName: prov.vendedor,
+          sellerPhone: prov.telefono,
+          fiscalAddress: prov.direccionFiscal,
+          companyName: prov.nombreEmpresa,
+        }));
+        setProviders(mapped);
+      } catch (err) {
+        setError('Error al cargar proveedores');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProviders();
-  }, []);
+  }, []); // El array de dependencias está vacío, ya que fetchProviders se define y llama dentro de useEffect.
 
   // Enviar nuevo proveedor
-const onSubmit = async (data: ProviderForm) => {
-  const backendData = {
-    nombre: data.name,
-    paginaWeb: data.website,
-    vendedor: data.sellerName,
-    telefono: data.sellerPhone,
-    direccionFiscal: data.fiscalAddress,
-    nombreEmpresa: data.companyName,
-  };
-
-  try {
-    const res = await api.post('/api/proveedores', backendData);
-    const newProvider: Provider = {
-      id: res.data.id,
-      name: backendData.nombre,
-      website: backendData.paginaWeb,
-      sellerName: backendData.vendedor,
-      sellerPhone: backendData.telefono,
-      fiscalAddress: backendData.direccionFiscal,
-      companyName: backendData.nombreEmpresa,
+  const onSubmit = async (data: ProviderForm) => {
+    const backendData = {
+      nombre: data.name,
+      paginaWeb: data.website,
+      vendedor: data.sellerName,
+      telefono: data.sellerPhone,
+      direccionFiscal: data.fiscalAddress,
+      nombreEmpresa: data.companyName,
     };
-    setProviders((prev) => [...prev, newProvider]);
-    alert('Proveedor creado con éxito');
-    reset();
-  } catch (err) {
-    console.error('Error creando proveedor:', err);
-    alert('Error al crear proveedor');
-  }
-};
+
+    try {
+      // Indicamos que estamos cargando al enviar el formulario
+      setLoading(true); 
+      const res = await api.post('/api/proveedores', backendData);
+      const newProvider: Provider = {
+        id: res.data.id,
+        name: backendData.nombre,
+        website: backendData.paginaWeb,
+        sellerName: backendData.vendedor,
+        sellerPhone: backendData.telefono,
+        fiscalAddress: backendData.direccionFiscal,
+        companyName: backendData.nombreEmpresa,
+      };
+      setProviders((prev) => [...prev, newProvider]);
+      alert('Proveedor creado con éxito');
+      reset();
+    } catch (err) {
+      console.error('Error creando proveedor:', err);
+      alert('Error al crear proveedor');
+    } finally {
+      // Terminamos la carga, independientemente del resultado
+      setLoading(false); 
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Proveedores</h1>
+        {/* Aquí podrías añadir un botón para abrir un modal de "Nuevo Proveedor" si lo necesitas */}
         <Button>
           <Plus className="w-5 h-5 mr-2" />
           Nuevo Proveedor
