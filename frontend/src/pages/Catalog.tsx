@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import FileUpload from "../components/ui/FileUpload";
 import Button from "../components/ui/Button";
 import Select from "../components/ui/Select";
-import MultiSelect from "../components/ui/MultiSelect";
+// Ya no necesitamos MultiSelect si un catálogo solo tiene una marca
+// import MultiSelect from "../components/ui/MultiSelect"; 
 import api from "../api/axios";
 
 const Catalog = () => {
     const [provider, setProvider] = useState("");
-    const [brands, setBrands] = useState<string[]>([]);
+    // CAMBIO CLAVE: De brands (plural) a brand (singular)
+    const [brand, setBrand] = useState<string>(""); 
     const [file, setFile] = useState<File | null>(null);
 
     const [providerOptions, setProviderOptions] = useState<{ label: string; value: string }[]>([]);
@@ -34,7 +36,6 @@ const Catalog = () => {
                     label: m.nombre,
                     value: m.id.toString(),
                 }));
-                // --- ¡La línea que faltaba! ---
                 setBrandOptions(opciones); 
             })
             .catch((err) => {
@@ -43,7 +44,8 @@ const Catalog = () => {
     }, []); // El array de dependencias está vacío, se ejecuta solo al montar el componente.
 
     const handleSubmit = () => {
-        if (!file || !provider || brands.length === 0) {
+        // CAMBIO CLAVE: Verificar !brand en lugar de brands.length === 0
+        if (!file || !provider || !brand) { 
             alert("Por favor completa todos los campos.");
             return;
         }
@@ -51,7 +53,9 @@ const Catalog = () => {
         const formData = new FormData();
         formData.append("catalog", file);
         formData.append("provider", provider);
-        formData.append("brands", JSON.stringify(brands));
+        // CAMBIO CLAVE: Enviar 'brandId' con el valor singular 'brand'
+        // Asegúrate de que el nombre del campo ("marcaId" o "brandId") coincida con lo que espera tu backend en el modelo de Catálogo
+        formData.append("marcaId", brand); 
 
         api.post("/api/catalogos", formData, {
             headers: {
@@ -61,10 +65,10 @@ const Catalog = () => {
         .then((res) => {
             alert("Catálogo subido con éxito");
             console.log("Respuesta del servidor:", res.data);
-            // Optionally, reset form fields after successful upload
+            // Opcional: reiniciar campos del formulario después de la subida exitosa
             setFile(null);
             setProvider("");
-            setBrands([]);
+            setBrand(""); // Reiniciar el estado de la marca singular
         })
         .catch((err) => {
             console.error("Error al subir catálogo:", err);
@@ -83,11 +87,11 @@ const Catalog = () => {
                 onChange={setProvider}
             />
 
-            <MultiSelect
-                label="Marcas"
+            <Select // Este componente ahora se usa para una selección única de marca
+                label="Marca"
                 options={brandOptions}
-                selected={brands}
-                onChange={setBrands}
+                value={brand} // Ahora 'brand' está definido
+                onChange={setBrand} // Ahora 'setBrand' está definido
             />
 
             <FileUpload onFileSelect={setFile} />
