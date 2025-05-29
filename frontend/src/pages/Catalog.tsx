@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FileUpload from "../components/ui/FileUpload";
 import Button from "../components/ui/Button";
 import Select from "../components/ui/Select";
+import MultiSelect from "../components/ui/MultiSelect";
 import api from "../api/axios";
 
 const Catalog = () => {
@@ -69,9 +70,9 @@ return (
             onChange={setProvider}
         />
 
-        <Select
+        <MultiSelect
             label="Marcas"
-            options={brandOptions} // <-- esto debe ser un array de strings con marcas
+            options={brandOptions}
             selected={brands}
             onChange={setBrands}
         />

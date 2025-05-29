@@ -1,37 +1,45 @@
+// components/ui/MultiSelect.tsx
 import React from "react";
 
 interface MultiSelectProps {
-    label?: string;
+    label: string;
     options: string[];
     selected: string[];
     onChange: (selected: string[]) => void;
 }
 
-const MultiSelect: React.FC<MultiSelectProps> = ({ label, options, selected, onChange }) => {
-    const toggleOption = (value: string) => {
-        if (selected.includes(value)) {
-        onChange(selected.filter((v) => v !== value));
+const MultiSelect: React.FC<MultiSelectProps> = ({
+    label,
+    options,
+    selected,
+    onChange,
+    }) => {
+    const toggleOption = (option: string) => {
+        if (selected.includes(option)) {
+        onChange(selected.filter((item) => item !== option));
         } else {
-        onChange([...selected, value]);
+        onChange([...selected, option]);
         }
-};
+    };
 
     return (
-        <div className="space-y-2">
-        {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
-        <div className="flex flex-wrap gap-2">
-            {options.map((opt) => (
-            <button
-                key={opt}
-                type="button"
-                className={`px-3 py-1 border rounded-full ${
-                selected.includes(opt) ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-800"
-                }`}
-                onClick={() => toggleOption(opt)}
-            >
-                {opt}
-            </button>
-            ))}
+        <div>
+        <label className="block mb-2 font-medium text-gray-700">{label}</label>
+        <div className="border rounded p-2 space-y-1">
+            {options.length === 0 ? (
+            <div className="text-gray-400 italic">No hay opciones disponibles</div>
+            ) : (
+            options.map((option) => (
+                <label key={option} className="flex items-center space-x-2">
+                <input
+                    type="checkbox"
+                    checked={selected.includes(option)}
+                    onChange={() => toggleOption(option)}
+                />
+                <span>{option}</span>
+                </label>
+            ))
+            )}
         </div>
         </div>
     );
