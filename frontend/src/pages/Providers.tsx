@@ -57,9 +57,27 @@ function Providers() {
 
   // Enviar nuevo proveedor
 const onSubmit = async (data: ProviderForm) => {
+  const backendData = {
+    nombre: data.name,
+    paginaWeb: data.website,
+    vendedor: data.sellerName,
+    telefono: data.sellerPhone,
+    direccionFiscal: data.fiscalAddress,
+    nombreEmpresa: data.companyName,
+  };
+
   try {
-    const res = await api.post('/api/proveedores', data);
-    setProviders((prev) => [...prev, res.data]); // Evita fetch extra
+    const res = await api.post('/api/proveedores', backendData);
+    const newProvider: Provider = {
+      id: res.data.id,
+      name: backendData.nombre,
+      website: backendData.paginaWeb,
+      sellerName: backendData.vendedor,
+      sellerPhone: backendData.telefono,
+      fiscalAddress: backendData.direccionFiscal,
+      companyName: backendData.nombreEmpresa,
+    };
+    setProviders((prev) => [...prev, newProvider]);
     alert('Proveedor creado con éxito');
     reset();
   } catch (err) {
