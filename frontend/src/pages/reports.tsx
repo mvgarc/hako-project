@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Table from '../components/ui/Table';
 import Filters from '../components/ui/Filters';
+import api from '../api/axios';
 
 // Tipo de datos para los reportes
 type Report = {
@@ -18,30 +19,27 @@ const Reports: React.FC = () => {
     const [brands, setBrands] = useState<string[]>([]);
 
     useEffect(() => {
-        // Simulación de datos obtenidos desde una API
-        const fetchedReports: Report[] = [
-        {
-            filename: 'catalogo1.pdf',
-            provider: 'Proveedor A',
-            brand: 'Marca A',
-            publishedAt: '2023-04-05T14:00',
-            notes: '',
-        },
-        {
-            filename: 'catalogo2.pdf',
-            provider: 'Proveedor B',
-            brand: 'Marca B',
-            publishedAt: '2023-04-06T15:00',
-            notes: '',
-        },
-        ];
+        api.get("/api/catalogos")
+        .then((res) => {
+            const fetchedReports: Report[] = res.data.map((item: any) => ({
+                filename: item.filename,
+                provider: item.provider,
+                brand: item.brand,
+                publishedAt: item.publishedAt,
+                notes: item.notes || "",
+            }));
 
-    setReports(fetchedReports);
-    setFilteredReports(fetchedReports);
+            setReports(fetchedReports);
+            setFilteredReports(fetchedReports);
 
-    setProviders(['Proveedor A', 'Proveedor B', 'Proveedor C']);
-    setBrands(['Marca A', 'Marca B', 'Marca C']);
-    }, []);
+            // También puedes extraer los valores únicos
+            setProviders([...new Set(fetchedReports.map(r => r.provider))]);
+            setBrands([...new Set(fetchedReports.map(r => r.brand))]);
+        })
+        .catch((err) => {
+            console.error("Error al obtener los reportes:", err);
+        });
+}, []);
     
     const handleFilterChange = (filters: { provider: string; brand: string; date: string }) => {
         let filtered = [...reports];
