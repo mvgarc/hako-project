@@ -1,8 +1,9 @@
 import React from 'react';
 interface SelectOption {
-  label: string; // El texto que se muestra al usuario
-  value: string; // El valor real que se envía en el formulario
+    label: string;
+    value: string;
 }
+
 interface SelectProps {
     label?: string;
     options: SelectOption[];
@@ -19,13 +20,14 @@ const Select: React.FC<SelectProps> = ({ label, options, value, onChange }) => {
             value={value}
             onChange={(e) => onChange(e.target.value)}
         >
-            <option value="">Selecciona una opción</option>
-            {options.map((option) => ( // Cambiamos 'opt' a 'option' para mayor claridad
+            {/* ¡Añade una key única a la opción por defecto! */}
+            <option key="default-select-option" value="">Selecciona una opción</option> 
+            {options.map((option) => (
             <option
-                key={option.value} // Usa el 'value' del objeto como key (debe ser único)
-                value={option.value} // Usa el 'value' del objeto como valor de la opción
+                key={option.value} // Usa el 'value' del objeto como clave única
+                value={option.value}
             >
-                {option.label} {/* Muestra el 'label' del objeto */}
+                {option.label}
             </option>
             ))}
         </select>
