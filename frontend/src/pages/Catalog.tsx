@@ -13,24 +13,24 @@ const Catalog = () => {
     const [brandOptions, setBrandOptions] = useState<{ label: string; value: string }[]>([]);
 
     useEffect(() => {
-    // Obtener proveedores
-    api.get("/api/proveedores")
-        .then((res) => {
-            const opciones = res.data.map((p: any) => p.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
-            setProviderOptions(opciones);
-        })
-        .catch((err) => {
-            console.error("Error al cargar proveedores:", err);
+        // Obtener proveedores
+        api.get("/api/proveedores")
+            .then((res) => {
+                const opciones = res.data.map((p: any) => p.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
+                setProviderOptions(opciones);
+            })
+            .catch((err) => {
+                console.error("Error al cargar proveedores:", err);
         });
 
-    // Obtener marcas
-    api.get("/api/marcas")
-        .then((res) => {
-            const opciones = res.data.map((m: any) => m.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
-            setBrandOptions(opciones);
-        })
-        .catch((err) => {
-            console.error("Error al cargar marcas:", err);
+        // Obtener marcas
+        api.get("/api/marcas")
+            .then((res) => {
+                const opciones = res.data.map((m: any) => m.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
+                setBrandOptions(opciones);
+            })
+            .catch((err) => {
+                console.error("Error al cargar marcas:", err);
         });
 }, [])
 
