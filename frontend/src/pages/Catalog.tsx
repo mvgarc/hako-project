@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import FileUpload from "../components/ui/FileUpload";
 import Button from "../components/ui/Button";
 import Select from "../components/ui/Select";
-// Ya no necesitamos MultiSelect si un catálogo solo tiene una marca
-// import MultiSelect from "../components/ui/MultiSelect"; 
 import api from "../api/axios";
 
 const Catalog = () => {
@@ -16,32 +14,26 @@ const Catalog = () => {
     const [brandOptions, setBrandOptions] = useState<{ label: string; value: string }[]>([]);
 
     useEffect(() => {
-        // Obtener proveedores
-        api.get("/api/proveedores")
-            .then((res) => {
-                const opciones = res.data.map((p: any) => ({
-                    label: p.nombre,
-                    value: p.id.toString(),
-                }));
-                setProviderOptions(opciones);
-            })
-            .catch((err) => {
-                console.error("Error al cargar proveedores:", err);
-            });
+    // Obtener proveedores
+    api.get("/api/proveedores")
+        .then((res) => {
+            const opciones = res.data.map((p: any) => p.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
+            setProviderOptions(opciones);
+        })
+        .catch((err) => {
+            console.error("Error al cargar proveedores:", err);
+        });
 
-        // Obtener marcas
-        api.get("/api/marcas")
-            .then((res) => {
-                const opciones = res.data.map((m: any) => ({
-                    label: m.nombre,
-                    value: m.id.toString(),
-                }));
-                setBrandOptions(opciones); 
-            })
-            .catch((err) => {
-                console.error("Error al cargar marcas:", err);
-            });
-    }, []); // El array de dependencias está vacío, se ejecuta solo al montar el componente.
+    // Obtener marcas
+    api.get("/api/marcas")
+        .then((res) => {
+            const opciones = res.data.map((m: any) => m.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
+            setBrandOptions(opciones);
+        })
+        .catch((err) => {
+            console.error("Error al cargar marcas:", err);
+        });
+}, [])
 
     const handleSubmit = () => {
         // CAMBIO CLAVE: Verificar !brand en lugar de brands.length === 0
