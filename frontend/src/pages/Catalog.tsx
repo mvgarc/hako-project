@@ -51,7 +51,7 @@ const Catalog = () => {
         formData.append("provider", provider);
         formData.append("marcaId", brand); 
 
-        api.post("/api/upload", formData, {
+        api.post("/api/catalogos/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
