@@ -47,7 +47,7 @@ const Catalog = () => {
         }
 
         const formData = new FormData();
-        formData.append("catalog", file);
+        formData.append("archivo", file);
         formData.append("provider", provider);
         formData.append("marcaId", brand); 
 
