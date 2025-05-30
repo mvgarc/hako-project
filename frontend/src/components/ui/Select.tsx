@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select as ReactSelect, SingleValue } from 'react-select';
+import ReactSelect, { SingleValue } from 'react-select'; 
 
 interface SelectOption {
     label: string;

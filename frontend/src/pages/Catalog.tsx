@@ -16,22 +16,21 @@ const Catalog = () => {
         // Obtener proveedores
         api.get("/api/proveedores")
             .then((res) => {
-                // CORRECCIÓN AQUÍ: Mapear a objetos { label, value }
                 const opciones = res.data.map((p: any) => ({
-                    label: p.nombre, 
+                    label: p.nombre,
+                    value: p.id.toString(), // ¡Añadir esta línea!
                 }));
                 setProviderOptions(opciones);
             })
             .catch((err) => {
                 console.error("Error al cargar proveedores:", err);
-        });
+            });
 
-        // Obtener marcas
+        // Obtener marcas (esta parte ya estaba correcta)
         api.get("/api/marcas")
             .then((res) => {
-                // CORRECCIÓN AQUÍ: Mapear a objetos { label, value }
                 const opciones = res.data.map((m: any) => ({
-                    label: m.nombre, // Asegúrate que 'nombre' es la propiedad correcta para mostrar
+                    label: m.nombre,
                     value: m.id.toString(),
                 }));
                 setBrandOptions(opciones);
@@ -39,7 +38,7 @@ const Catalog = () => {
             .catch((err) => {
                 console.error("Error al cargar marcas:", err);
             });
-}, [])
+    }, [])
 
     const handleSubmit = () => {
         if (!file || !provider || !brand) { 
