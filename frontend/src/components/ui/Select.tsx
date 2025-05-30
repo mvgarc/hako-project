@@ -20,11 +20,11 @@ const Select: React.FC<SelectProps> = ({ label, options, value, onChange }) => {
             value={value}
             onChange={(e) => onChange(e.target.value)}
         >
-            {/* ¡Añade una key única a la opción por defecto! */}
-            <option key="default-select-option" value="">Selecciona una opción</option> 
+            {/* ¡Elimina esta línea! */}
+            {/* <option key="default-select-option" value="">Selecciona una opción</option> */} 
             {options.map((option) => (
             <option
-                key={option.value} // Usa el 'value' del objeto como clave única
+                key={option.value}
                 value={option.value}
             >
                 {option.label}
