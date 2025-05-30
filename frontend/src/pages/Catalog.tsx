@@ -16,7 +16,10 @@ const Catalog = () => {
         // Obtener proveedores
         api.get("/api/proveedores")
             .then((res) => {
-                const opciones = res.data.map((p: any) => p.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
+                // CORRECCIÓN AQUÍ: Mapear a objetos { label, value }
+                const opciones = res.data.map((p: any) => ({
+                    label: p.nombre, 
+                }));
                 setProviderOptions(opciones);
             })
             .catch((err) => {
@@ -26,16 +29,19 @@ const Catalog = () => {
         // Obtener marcas
         api.get("/api/marcas")
             .then((res) => {
-                const opciones = res.data.map((m: any) => m.id.toString()); // <-- CAMBIO AQUÍ: solo ID como string
+                // CORRECCIÓN AQUÍ: Mapear a objetos { label, value }
+                const opciones = res.data.map((m: any) => ({
+                    label: m.nombre, // Asegúrate que 'nombre' es la propiedad correcta para mostrar
+                    value: m.id.toString(),
+                }));
                 setBrandOptions(opciones);
             })
             .catch((err) => {
                 console.error("Error al cargar marcas:", err);
-        });
+            });
 }, [])
 
     const handleSubmit = () => {
-        // CAMBIO CLAVE: Verificar !brand en lugar de brands.length === 0
         if (!file || !provider || !brand) { 
             alert("Por favor completa todos los campos.");
             return;
@@ -44,8 +50,6 @@ const Catalog = () => {
         const formData = new FormData();
         formData.append("catalog", file);
         formData.append("provider", provider);
-        // CAMBIO CLAVE: Enviar 'brandId' con el valor singular 'brand'
-        // Asegúrate de que el nombre del campo ("marcaId" o "brandId") coincida con lo que espera tu backend en el modelo de Catálogo
         formData.append("marcaId", brand); 
 
         api.post("/api/catalogos", formData, {
@@ -56,10 +60,9 @@ const Catalog = () => {
         .then((res) => {
             alert("Catálogo subido con éxito");
             console.log("Respuesta del servidor:", res.data);
-            // Opcional: reiniciar campos del formulario después de la subida exitosa
             setFile(null);
             setProvider("");
-            setBrand(""); // Reiniciar el estado de la marca singular
+            setBrand(""); 
         })
         .catch((err) => {
             console.error("Error al subir catálogo:", err);
@@ -78,11 +81,11 @@ const Catalog = () => {
                 onChange={setProvider}
             />
 
-            <Select // Este componente ahora se usa para una selección única de marca
+            <Select
                 label="Marca"
                 options={brandOptions}
-                value={brand} // Ahora 'brand' está definido
-                onChange={setBrand} // Ahora 'setBrand' está definido
+                value={brand}
+                onChange={setBrand}
             />
 
             <FileUpload onFileSelect={setFile} />
