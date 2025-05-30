@@ -6,7 +6,6 @@ import api from "../api/axios";
 
 const Catalog = () => {
     const [provider, setProvider] = useState("");
-    // CAMBIO CLAVE: De brands (plural) a brand (singular)
     const [brand, setBrand] = useState<string>(""); 
     const [file, setFile] = useState<File | null>(null);
 
