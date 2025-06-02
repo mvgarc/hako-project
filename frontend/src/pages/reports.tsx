@@ -3,15 +3,15 @@ import Table from '../components/ui/Table';
 import Filters from '../components/ui/Filters';
 import api from '../api/axios';
 
-// Tipo de datos para los reportes (asegúrate de que coincide con lo que devuelve el backend)
+// Tipo de datos para los reportes (debe coincidir con lo que devuelve el backend)
 type Report = {
-    id: number; // Agrega el ID si lo necesitas para alguna operación
+    id: number;
     filename: string;
-    provider: string; // Esperamos el nombre del proveedor
-    brand: string;    // Esperamos el nombre de la marca
-    publishedAt: string; // Fecha de publicación (ahora vendrá del backend)
+    provider: string;
+    brand: string;
+    publishedAt: string;
     notes?: string;
-    enlaceDescarga?: string; // Si quieres usarlo en el frontend
+    enlaceDescarga?: string;
 };
 
 const Reports: React.FC = () => {
@@ -26,10 +26,10 @@ const Reports: React.FC = () => {
                 const res = await api.get("/api/catalogos");
                 const fetchedReports: Report[] = res.data.map((item: any) => ({
                     id: item.id,
-                    filename: item.filename, // Asegúrate de que el backend envía 'filename' o usa 'nombre' de item
-                    provider: item.provider,
-                    brand: item.brand,
-                    publishedAt: item.publishedAt || "N/A", // Ahora debería recibir la fecha real o "N/A"
+                    filename: item.filename, // <-- Mapea directamente 'filename' que viene del backend
+                    provider: item.provider, // <-- Mapea directamente 'provider' que viene del backend
+                    brand: item.brand,       // <-- Mapea directamente 'brand' que viene del backend
+                    publishedAt: item.publishedAt || "N/A", // <-- Mapea directamente 'publishedAt' que viene del backend
                     notes: item.notes || "",
                     enlaceDescarga: item.enlaceDescarga,
                 }));
@@ -53,19 +53,18 @@ const Reports: React.FC = () => {
     const handleFilterChange = (filters: { provider: string; brand: string; date: string }) => {
         let filtered = [...reports];
 
-        if (filters.provider && filters.provider !== 'Todos') { // Añadir 'Todos' para manejar la opción de "todos"
+        if (filters.provider && filters.provider !== 'Todos') {
             filtered = filtered.filter((report) => report.provider === filters.provider);
         }
 
-        if (filters.brand && filters.brand !== 'Todos') { // Añadir 'Todos' para manejar la opción de "todos"
+        if (filters.brand && filters.brand !== 'Todos') {
             filtered = filtered.filter((report) => report.brand === filters.brand);
         }
 
         if (filters.date) {
-            // Asumiendo que filters.date es 'YYYY-MM-DD' y publishedAt es 'DD/MM/YYYY' (formato que enviamos del backend)
-            // Para una comparación simple, ajustamos el formato del filtro al del backend
-            const filterDateParts = filters.date.split('-'); // ['YYYY', 'MM', 'DD']
-            const filterDateFormatted = `${filterDateParts[2]}/${filterDateParts[1]}/${filterDateParts[0]}`; // 'DD/MM/YYYY'
+            // Ajustamos el formato de la fecha del filtro (YYYY-MM-DD) al formato del backend (DD/MM/YYYY)
+            const filterDateParts = filters.date.split('-');
+            const filterDateFormatted = `${filterDateParts[2]}/${filterDateParts[1]}/${filterDateParts[0]}`;
 
             filtered = filtered.filter((report) => report.publishedAt.startsWith(filterDateFormatted));
         }
@@ -77,13 +76,12 @@ const Reports: React.FC = () => {
     const handleNotesChange = (index: number, newNote: string) => {
         // Actualiza el array filtrado
         const updatedFiltered = [...filteredReports];
-        if (updatedFiltered[index]) { // Asegura que el índice es válido
+        if (updatedFiltered[index]) {
             updatedFiltered[index].notes = newNote;
             setFilteredReports(updatedFiltered);
         }
 
-        // Si también necesitas actualizar el array original 'reports'
-        // (esto es buena práctica para mantener consistencia si los filtros se resetean o se modifican más tarde)
+        // También actualiza el array original 'reports' para mantener la consistencia
         const updatedAllReports = reports.map((report) =>
             report.id === filteredReports[index]?.id // Usa el ID para encontrar el reporte original
                 ? { ...report, notes: newNote }
