@@ -1,7 +1,10 @@
+// src/layouts/Layout.tsx
+
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { Home, Users, Package, LogOut, Settings, UploadCloud, FileText } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useAuth } from '../contexts/AuthContext'; // Importa tu AuthContext
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
@@ -14,6 +17,22 @@ const navigation = [
 
 function Layout() {
   const location = useLocation();
+  const navigate = useNavigate(); // Hook para la navegación programática
+  const { logout, isAuthenticated } = useAuth(); // Obtiene la función logout y el estado de autenticación del contexto
+
+  const handleLogout = () => {
+    logout(); // Llama a la función logout de tu contexto
+    navigate('/login'); // Redirige al usuario a la página de login después de cerrar sesión
+  };
+
+  // Opcional: Si quieres que el layout solo se muestre si está autenticado,
+  // o redirigir automáticamente si no lo está.
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate('/login');
+  //   }
+  // }, [isAuthenticated, navigate]);
+
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -47,7 +66,11 @@ function Layout() {
               })}
             </nav>
             <div className="p-4 border-t">
-              <button className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100">
+              {/* Asigna el manejador de eventos onClick */}
+              <button
+                onClick={handleLogout} // <--- AÑADE ESTO
+                className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100"
+              >
                 <LogOut className="w-5 h-5 mr-3" />
                 Cerrar Sesión
               </button>
@@ -66,4 +89,4 @@ function Layout() {
   );
 }
 
-export default Layout
+export default Layout;
