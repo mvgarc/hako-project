@@ -25,14 +25,6 @@ function Layout() {
     navigate('/login'); // Redirige al usuario a la página de login después de cerrar sesión
   };
 
-  // Opcional: Si quieres que el layout solo se muestre si está autenticado,
-  // o redirigir automáticamente si no lo está.
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     navigate('/login');
-  //   }
-  // }, [isAuthenticated, navigate]);
-
 
   return (
     <div className="min-h-screen bg-gray-100">
